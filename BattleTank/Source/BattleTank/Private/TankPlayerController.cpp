@@ -13,7 +13,7 @@ void ATankPlayerController::BeginPlay()
 	}
 	if (GetPawn())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Possessed tank: %s"), *ControlledTank->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController possessed tank: %s"), *ControlledTank->GetName());
 	}	
 }
 
