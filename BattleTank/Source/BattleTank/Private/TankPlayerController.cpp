@@ -14,14 +14,14 @@ void ATankPlayerController::BeginPlay()
 	if (GetPawn())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PlayerController possessed tank: %s"), *ControlledTank->GetName());
-	}	
+	}
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AimTowardCrosshair();	
+	AimTowardCrosshair();
 }
 
 ATank* ATankPlayerController::GetControlledTank() const
@@ -36,7 +36,22 @@ void ATankPlayerController::AimTowardCrosshair()
 		return;
 	}
 
-	// Get world location (linetrace) through crosshair
-	// if it hits the landscape
-		// Tell controlled tank to aim at this point
+	FVector OutHitLocation; // Out parameter
+	if (GetSightRayHitLocation(OutHitLocation))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *OutHitLocation.ToString());
+		// Get world location of a linetrace through crosshair
+				
+			// Tell controlled tank to aim at this point
+	}
+}
+
+bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
+{
+	FHitResult HitResult;
+	OutHitLocation = FVector(1.0f);
+	// Linetrace from end of barrel to (infinity?) 
+	//ActorLineTraceSingle(HitResult, )
+	// Return true if hit landscape
+	return true;
 }
