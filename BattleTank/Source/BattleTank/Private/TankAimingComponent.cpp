@@ -44,13 +44,13 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	);
 	if (bHaveFiringSolution && HitLocation != FVector(0))	
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%f: Firing solution found"), GetWorld()->GetTimeSeconds());
+		//UE_LOG(LogTemp, Warning, TEXT("%f: Firing solution found"), GetWorld()->GetTimeSeconds());
 		FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelToward(AimDirection);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%f: Unable to find firing solution"), GetWorld()->GetTimeSeconds());
+		//UE_LOG(LogTemp, Warning, TEXT("%f: Unable to find firing solution"), GetWorld()->GetTimeSeconds());
 	}
 }
 
@@ -61,5 +61,5 @@ void UTankAimingComponent::MoveBarrelToward(FVector AimDirection)
 	FRotator AimAsRotator = AimDirection.Rotation();
 	FRotator DeltaRotator = AimAsRotator - BarrelRotator;
 
-	Barrel->Elevate(5);
+	Barrel->Elevate(DeltaRotator.Pitch);
 }
