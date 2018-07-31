@@ -2,6 +2,7 @@
 
 #include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -19,26 +20,8 @@ void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
 	Barrel = BarrelToSet;
 }
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
-{	
+{
 	if (!Barrel)
 	{
 		return;
@@ -48,22 +31,29 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 
 	// Calculate the OutLaunchVelocity
-	if (UGameplayStatics::SuggestProjectileVelocity
+	bool bHaveFiringSolution = UGameplayStatics::SuggestProjectileVelocity
 	(
-		this, 
-		OutLaunchVelocity, 
-		StartLocation, 
-		HitLocation, 
+		this,
+		OutLaunchVelocity,
+		StartLocation,
+		HitLocation,
 		LaunchSpeed,
-		false,
-		0,
-		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
-	))
+	);
+	if (bHaveFiringSolution)	
 	{
 		FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
-		
-		FString TankName = GetOwner()->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *TankName, *AimDirection.ToString());
-	}	
+		MoveBarrelToward(AimDirection);
+	}
+}
+
+void UTankAimingComponent::MoveBarrelToward(FVector AimDirection)
+{
+	/// Find difference between current barrel rotation and AimDirection
+	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
+	FRotator AimAsRotator = AimDirection.Rotation();
+	FRotator DeltaRotator = AimAsRotator - BarrelRotator;
+
+	/// Move the barrel some amount this frame
+	/// Given a maximum elevation speed and frame time
 }
