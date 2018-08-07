@@ -10,6 +10,7 @@ class UTankAimingComponent;
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+class UTankTrack;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -28,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetTurretReference(UTankTurret* TurretToSet);
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTracksReference(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet);
+
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
@@ -45,6 +49,10 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	UTankBarrel* Barrel = nullptr;	
+
+	UTankTrack* LeftTrack = nullptr;
+
+	UTankTrack* RightTrack = nullptr;
 
 	double LastFireTime = 0;
 };
